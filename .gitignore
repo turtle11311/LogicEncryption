@@ -7,3 +7,6 @@ original/
 # ABC
 alanmi-abc-*/
 .nfs*
+
+# objs
+*.o

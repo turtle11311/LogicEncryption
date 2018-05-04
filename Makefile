@@ -2,11 +2,11 @@ TARGET = le
 CC = g++
 ABC	= ./alanmi-abc-906cecc894b2
 
-SRCS = main.cpp ReadBench.cpp Simulate.cpp CorruptionCompute.cpp
-OBJS = ${SRCS:.c=.o}
-LIB = -lm -ldl -rdynamic -lreadline -pthread -std=c++11 -ltermcap ${ABC}/libabc.a
+SRCS = main.cpp ReadBench.cpp Simulate.cpp CorruptionCompute.cpp mpfr_mul_d.cpp gmpfrxx.cpp
+OBJS = ${SRCS:.cpp=.o}
+LIB = -lm -ldl -rdynamic -lreadline -pthread -ltermcap -lgmp -lmpfr ${ABC}/libabc.a
 INCLUDE = -I. -I${ABC}/src
-CFLAGS  = -O3 -Wall
+CXXFLAGS  = -O3 -Wall -std=c++11
 ${TARGET}: ${OBJS}
 	${CC} ${CFLAGS} ${OBJS} ${LIB} ${LIBS} ${INCLUDE} -o ${TARGET}
 
@@ -17,7 +17,8 @@ ${TARGET}: ${OBJS}
 	${CC} ${CFLAGS} ${INCLUDE} -o $@ -c $<
 	
 .cpp.o:
-	${CC} ${CFLAGS} ${INCLUDE} -o $@ -c $<
+	${CC} ${CXXFLAGS} ${INCLUDE} -o $@ -c $<
 
 clean:
 	rm -f *~ $(TARGET);
+	rm -rf *.o
