@@ -13,8 +13,8 @@ extern int nWords;
 //***********************************************
 Wire_Corruption *CorruptionCompute(Bn_Ntk *bNtk) {
     int j, k, l, NP = 0;
-    double MD = 0;
-    double corruption, max_corruption = -1;
+    mpfr_class corruption, max_corruption, MD;
+    max_corruption = "-1", MD = "0";
     Bn_Node *bNode, *fanout, *Po, *subNode;
     Wire_Corruption *wire = new Wire_Corruption();
     Vec_Ptr_t *NodePOT_Ary = Vec_PtrAlloc(0);
@@ -31,7 +31,7 @@ Wire_Corruption *CorruptionCompute(Bn_Ntk *bNtk) {
 
             Vec_PtrForEachEntry(Bn_Node *, bNode->Fanout_Ary, fanout, k) {
                 NP = 0;
-                MD = 0;
+                MD = "0";
                 memset(ODCTmp, 0, sizeof(unsigned) * nWords);
                 PreOrderTraversal(NodePOT_Ary, fanout);
                 Simulation(NodePOT_Ary);
@@ -64,7 +64,7 @@ Wire_Corruption *CorruptionCompute(Bn_Ntk *bNtk) {
             for (int i = 0; i < nWords; ++i) bNode->Value[i] = ~bNode->Value[i];
         }
     }
-    cout << "max_wire_corruption: " << max_corruption << endl;
+    mpfr_printf("max_wire_corruption: %.40Rf\n", max_corruption.get_mpfr_t());
 
     free(ODCTmp);
     free(Tmp);

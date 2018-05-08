@@ -21,6 +21,7 @@ Vec_Ptr_t *correct_Po;
 
 //***********************************************
 int main(int argc, char const *argv[]) {
+    mpfr_class::set_dprec(128);
     int j;
     unsigned *tmp;
     Bn_Ntk *bNtk;
@@ -115,8 +116,8 @@ void PrintCorruption(Bn_Ntk *bNtk) {
     int j;
     Bn_Node *bNode;
     // unsigned * Po_value;
-    unsigned long long MD = 0, HD = 0;
-
+    unsigned long long HD = 0;
+    mpfr_class MD;
     /*unsigned *Tmp = ALLOC(unsigned, 1);
       Vec_PtrForEachEntry(Bn_Node *, bNtk->Po_Ary, bNode, j) {
       for (int i = 0; i < nWords; ++i) {
@@ -130,11 +131,12 @@ void PrintCorruption(Bn_Ntk *bNtk) {
       nPatterns << endl;
       cout << "Corruption value: " << fixed  <<  setprecision(3) << (double)(MD
       / (bitcount * nPatterns)) << endl;*/
-
-    double avg1 = 0, avg2 = 0;
+    mpfr_class avg1;
+    avg1 = "0";
+    double avg2 = 0;
     for (int i = 0; i < nWords; ++i) {
         for (int k = 0; k < 32; ++k) {
-            MD = 0, HD = 0;
+            MD = "0", HD = 0;
             Vec_PtrForEachEntry(Bn_Node *, bNtk->Po_Ary, bNode, j) {
                 // cout << GetBit(&bNode->Value[i], k);
                 if (GetBit(&bNode->Value[i], k) !=
@@ -153,10 +155,10 @@ void PrintCorruption(Bn_Ntk *bNtk) {
               ((double)MD / (bitcount)) << endl;
               cout << "hamming_distance: " << fixed  <<  setprecision(3) <<
               ((double)HD / bNtk->Po_Ary->nSize) << endl;*/
-            avg1 += ((double)MD / (bitcount));
+            avg1 += MD;
             avg2 += ((double)HD / bNtk->Po_Ary->nSize);
         }
     }
-    cout << "CV: " << (avg1 / nPatterns) << endl;
+    cout << "HD: " << typeid(avg1 / nPatterns).name() << endl;
     cout << "HD: " << (avg2 / nPatterns) << endl;
 }
