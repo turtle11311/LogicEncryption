@@ -12,17 +12,17 @@ extern void Bn_NtkDFS(Bn_Ntk *bNtk);
 extern void ComputeLevel(Vec_Ptr_t *NodeDFS_Ary);
 extern void PreOrderTraversal(Vec_Ptr_t *NodePOT_Ary, Bn_Node *bNode);
 extern void PrintBn_Ntk(Bn_Ntk *bNtk, const char *pFileName);
-extern int Id;
+extern int Id, gatecount;
 void PrintCorruption(Bn_Ntk *bNtk);
 int nWords = 32, nKeys = 64;
-unsigned long long bitcount;
 double nPatterns;
+double keybound = 0.05;
 Vec_Ptr_t *correct_Po;
 
 //***********************************************
 int main(int argc, char const *argv[]) {
     mpfr_class::set_dprec(128);
-    int j;
+    int j, cnt = 0;
     unsigned *tmp;
     Bn_Ntk *bNtk;
     Bn_Node *bNode, *KeyPi, *KeyGate;
@@ -34,9 +34,17 @@ int main(int argc, char const *argv[]) {
     bNtk = Io_ReadBench(argv[1]);
     // PrintBn_Ntk(bNtk);
 
+    nKeys = (gatecount * keybound) + 0.5;
+    cout << "num_keys: " << nKeys << endl;
     correct_Po = Vec_PtrAlloc(0);
     nPatterns = 32 * nWords;
-    bitcount = pow(2, bNtk->Po_Ary->nSize) - 1;
+    mpfr_class two;
+    two = "2";
+
+    Vec_PtrForEachEntryReverse(Bn_Node *, bNtk->Po_Ary, bNode, j) {
+        mpfr_pow_si(bNode->Weight.get_mpfr_t(), two.get_mpfr_t(), -(++cnt),
+                    MPFR_RNDN);
+    };
 
     Vec_PtrForEachEntry(Bn_Node *, bNtk->Node_Ary, bNode, j) {
         bNode->Value = ALLOC(unsigned, nWords);
@@ -159,6 +167,7 @@ void PrintCorruption(Bn_Ntk *bNtk) {
             avg2 += ((double)HD / bNtk->Po_Ary->nSize);
         }
     }
-    cout << "HD: " << avg1 / nPatterns << endl;
+    avg1 /= nPatterns;
+    mpfr_printf("CV: %.128Rf\n", avg1.get_mpfr_t());
     cout << "HD: " << avg2 / nPatterns << endl;
 }

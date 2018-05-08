@@ -64,7 +64,7 @@ Wire_Corruption *CorruptionCompute(Bn_Ntk *bNtk) {
             for (int i = 0; i < nWords; ++i) bNode->Value[i] = ~bNode->Value[i];
         }
     }
-    mpfr_printf("max_wire_corruption: %.40Rf\n", max_corruption.get_mpfr_t());
+    mpfr_printf("max_wire_corruption: %.128Rf\n", max_corruption.get_mpfr_t());
 
     free(ODCTmp);
     free(Tmp);

@@ -8,6 +8,7 @@ void ComputeLevel(Vec_Ptr_t *NodeDFS_Ary);
 int MaxLevel(Bn_Node *bNode);
 void PrintBn_Ntk(Bn_Ntk *bNtk, const char *pFileName);
 int Id = 0;
+int gatecount = 0;
 
 //***********************************************
 Bn_Ntk *Io_ReadBench(const char *pFileName) {
@@ -53,7 +54,6 @@ Bn_Ntk *Io_ReadBench(const char *pFileName) {
             bNode->FType = 0;  // 0: buff, 1: not, 2: and, 3: or, 4: nand, 5:
                                // nor, 6: xor, 7: nxor, 8: mux
             bNode->Name = token;
-            bNode->Weight = pow(2, -(++nOutputs));
 
             iter = All_Node.find(token);
             if (iter != All_Node.end()) {
@@ -136,6 +136,7 @@ Bn_Ntk *Io_ReadBench(const char *pFileName) {
                 }
                 token = strtok(NULL, " =(,)");
             }
+            ++gatecount;
         }
     }
     inFile.close();
