@@ -159,6 +159,6 @@ void PrintCorruption(Bn_Ntk *bNtk) {
             avg2 += ((double)HD / bNtk->Po_Ary->nSize);
         }
     }
-    cout << "HD: " << typeid(avg1 / nPatterns).name() << endl;
-    cout << "HD: " << (avg2 / nPatterns) << endl;
+    cout << "HD: " << avg1 / nPatterns << endl;
+    cout << "HD: " << avg2 / nPatterns << endl;
 }
